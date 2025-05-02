@@ -1,26 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 const Home = () => {
-	return (
-		<div className="text-center">
-            
+	const [task, setTask] = useState("");
+	const [taskList, setTaskList] = useState([]);
 
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+	const addNewTask = (e) => {
+		if (e.key === "Enter" && task.trim() !== "") {
+			setTaskList((prev) => [...prev, task]);
+			setTask("");
+		}
+	};
+
+	const deleteTask = (taskToDelete) => {
+		const newList = taskList.filter((t) => t !== taskToDelete);
+		setTaskList(newList);
+	};
+
+	return (
+		<div className="d-flex justify-content-center min-vh-100 bg-dark">
+			<div className="container py-3" style={{ maxWidth: "600px", width: "100%" }}>
+				<div className="d-flex justify-content-between align-items-center">
+					<h2 className="text-white">Lista de tareas</h2>
+					<span className="text-white">{taskList.length} tarea(s) pendiente(s)</span>
+				</div>
+
+				<input
+					className="form-control mb-3"
+					type="text"
+					placeholder="Ingrese una nueva tarea."
+					value={task}
+					onChange={(e) => setTask(e.target.value)}
+					onKeyDown={addNewTask}
+				/>
+
+				<div className="border rounded p-2 bg-light">
+					{taskList.length === 0 && (
+						<p className="text-muted">No hay tareas aún.</p>
+					)}
+
+					{taskList.map((t, index) => (
+						<div
+							key={index}
+							className="d-flex justify-content-between align-items-center border-bottom py-2"
+						>
+							<span>{t}</span>
+							<button
+								className="btn btn-sm btn-outline-danger"
+								onClick={() => deleteTask(t)}
+							>
+								Borrar
+							</button>
+						</div>
+					))}
+				</div>
+			</div>
 		</div>
 	);
 };
